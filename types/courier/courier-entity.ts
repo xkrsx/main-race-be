@@ -1,14 +1,15 @@
-export interface NewCourierEntity extends Omit<CourierEntity, 'id'> {
+export interface NewCourierEntity extends Omit<CourierEntity, 'id' | 'password'> {
     id?: string;
+    password?: number
 }
 
-export interface CourierEntity {
-    id: string;
+export interface SimpleCourierEntity {
     number: number;
     name: string;
-    tasks: string[];
-    password: string;
-    points: number;
-    penalties: number;
     category: string;
+}
+
+export interface CourierEntity extends SimpleCourierEntity {
+    id: string;
+    password: number;
 }
