@@ -3,7 +3,7 @@ import {ValidationError} from "../utils/errors";
 import {pool} from "../utils/db";
 import {v4 as uuid} from "uuid";
 import {FieldPacket} from "mysql2";
-import {passwordGenerator} from "../utils/password-generator";
+import {codeGenerator} from "../utils/code-generator";
 
 type CourierRecordResults = [CourierEntity[], FieldPacket[]];
 
@@ -48,8 +48,10 @@ export class CourierRecord implements CourierEntity {
             throw new Error('Nie można stworzyć tego zawodnika, ponieważ już istnieje.');
         }
 
-        if (!this.password) {
-            this.password = passwordGenerator(1111, 9999);
+        // codeGenerator(1000, 9999, this.password, 'Nie można użyć tego hasła, ponieważ już istnieje.');
+
+        if (!this.password || this.password < 1000 || this.password > 9999) {
+            this.password = codeGenerator(1000, 9999);
         } else {
             throw new Error('Nie można użyć tego hasła, ponieważ już istnieje.');
         }

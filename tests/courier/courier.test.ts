@@ -1,5 +1,5 @@
-import {pool} from "../utils/db";
-import {CourierRecord} from "../records/courier.record";
+import {pool} from "../../utils/db";
+import {CourierRecord} from "../../records/courier.record";
 
 const defaultObject = {
     number: 111,
@@ -46,14 +46,14 @@ test('CourierRecord.insert returns new UUID.', async () => {
     expect(typeof courier.id).toBe('string');
 })
 
-test('CourierRecord.insert returns new password in a range between 1111 and 9999.', async () => {
+test('CourierRecord.insert returns new password in a range between 1000 and 9999.', async () => {
     const courier = new CourierRecord(defaultObject);
 
     await courier.insert();
 
     expect(courier.password).toBeDefined();
     expect(typeof courier.password).toBe('number');
-    expect(courier.password).toBeGreaterThanOrEqual(1111);
+    expect(courier.password).toBeGreaterThanOrEqual(1000);
     expect(courier.password).toBeLessThanOrEqual(9999);
 })
 

@@ -1,4 +1,4 @@
-import {CourierRecord} from "../records/courier.record";
+import {CourierRecord} from "../../records/courier.record";
 
 const defaultObject = {
     number: 267,
@@ -43,14 +43,14 @@ test('Name may not be empty or has more than 15 characters.', () => {
     })).toThrow('Imię/ksywa nie może być pusta, ani przekraczać 15 znaków.')
 });
 
-test('Password must be in a range between 1111 and 9999.', () => {
+test('Password must be in a range between 1000 and 9999.', () => {
     expect(() => new CourierRecord({
         ...defaultObject,
         password: null,
     }))
 });
 
-test('Password must be in a range between 1111 and 9999.', () => {
+test('Password must be in a range between 1000 and 9999.', () => {
     expect(() => new CourierRecord({
         ...defaultObject,
         password: 10000,
