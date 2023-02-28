@@ -7,7 +7,6 @@ import {codeGenerator} from "../utils/code-generator";
 
 type JobRecordResults = [JobEntity[], FieldPacket[]];
 
-
 export class JobRecord implements JobEntity {
     id: string;
     number: number;
@@ -56,28 +55,30 @@ export class JobRecord implements JobEntity {
         if (!this.id) {
             this.id = uuid();
         } else {
-            throw new Error('Nie można stworzyć tego zadania, ponieważ już istnieje.')
+            throw new Error('Nie można stworzyć tego zadania, ponieważ jest błędny.')
         }
 
         if (!this.cp_a_code || this.cp_a_code < 1000 || this.cp_a_code > 9999) {
             this.cp_a_code = codeGenerator(1000, 9999);
         } else {
-            throw new Error('Nie można użyć tego kodu, ponieważ już istnieje.');
+            throw new Error('Nie można użyć tego kodu, ponieważ jest błędny.');
         }
 
         if (!this.cp_b_code || this.cp_b_code < 1000 || this.cp_b_code > 9999) {
             this.cp_b_code = codeGenerator(1000, 9999);
         } else {
-            throw new Error('Nie można użyć tego kodu, ponieważ już istnieje.');
+            throw new Error('Nie można użyć tego kodu, ponieważ jest błędny.');
         }
 
-        if (!this.cp_c_code || this.cp_c_code < 1000 || this.cp_c_code > 9999) {
-            this.cp_c_code = codeGenerator(1000, 9999);
-        } else {
-            throw new Error('Nie można użyć tego kodu, ponieważ już istnieje.');
+        if (this.cp_c_name !== null) {
+            if (!this.cp_c_code || this.cp_c_code < 1000 || this.cp_c_code > 9999) {
+                this.cp_c_code = codeGenerator(1000, 9999);
+            } else {
+                throw new Error('Nie można użyć tego kodu, ponieważ już istnieje.');
+            }
         }
 
-        await pool.execute("INSERT INTO `jobs` (`id`, `number`, `cp_a_name`, `cp_a_code`, `cp_b_name`, `cp_b_code`, `cp_c_name`, `cp_c_code`, `points`) VALUES (:id, :number, :cp_a_name, :cp_a_code, :cp_b_name, :cp_b_code, :cp_c_name, :cp_c_code, :points)", this);
+        await pool.execute("INSERT INTO `jobs` (`id`, `cp_a_name`, `cp_a_code`, `cp_b_name`, `cp_b_code`, `cp_c_name`, `cp_c_code`, `points`) VALUES (:id, :cp_a_name, :cp_a_code, :cp_b_name, :cp_b_code, :cp_c_name, :cp_c_code, :points)", this);
 
         return this.id;
     }

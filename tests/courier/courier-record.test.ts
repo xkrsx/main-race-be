@@ -43,23 +43,25 @@ test('Name may not be empty or has more than 15 characters.', () => {
     })).toThrow('Imię/ksywa nie może być pusta, ani przekraczać 15 znaków.')
 });
 
+//@TODO: sprawdzić ten test
 test('Password must be in a range between 1000 and 9999.', () => {
     expect(() => new CourierRecord({
         ...defaultObject,
-        password: null,
-    })).toThrow('Password must be in a range between 1000')
+        password: 0,
+    })).toThrowError('Nie można użyć tego hasła, ponieważ jest błędne.')
 });
 
+//@TODO: sprawdzić ten test
 test('Password must be in a range between 1000 and 9999.', () => {
     expect(() => new CourierRecord({
         ...defaultObject,
         password: 10000,
-    })).toThrow('')
+    })).toThrowError('Nie można użyć tego hasła, ponieważ jest błędne.')
 });
 
 test('Category may not be empty.', () => {
     expect(() => new CourierRecord({
         ...defaultObject,
         category: ''
-    })).toThrow('Category may not be empty')
+    })).toThrow('Zawodnik musi być przypisany do kategorii.')
 });

@@ -1,8 +1,9 @@
-export interface NewJobEntity extends Omit<JobEntity, 'id' | 'number' | 'cp_c_name' | 'cp_c_code'> {
+export interface NewJobEntity extends Omit<JobEntity, 'id' | 'number' | 'cp_a_code' | 'cp_b_code' | 'cp_c_code'> {
     id?: string;
     number?: number
-    cp_c_name?: string | null;
-    cp_c_code?: number | null;
+    cp_a_code?: number;
+    cp_b_code?: number;
+    cp_c_code?: number;
 }
 
 export interface SimpleJobEntity {

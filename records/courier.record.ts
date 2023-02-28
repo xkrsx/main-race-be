@@ -51,7 +51,7 @@ export class CourierRecord implements CourierEntity {
         if (!this.password || this.password < 1000 || this.password > 9999) {
             this.password = codeGenerator(1000, 9999);
         } else {
-            throw new Error('Nie można użyć tego hasła, ponieważ już istnieje.');
+            throw new Error('Nie można użyć tego hasła, ponieważ jest błędne.');
         }
 
         await pool.execute("INSERT INTO `couriers` (`id`, `number`, `name`, `password`, `category`) VALUES (:id, :number, :name, :password, :category)", this);
