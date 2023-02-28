@@ -15,8 +15,8 @@ export class JobRecord implements JobEntity {
     cp_a_code: number;
     cp_b_name: string;
     cp_b_code: number;
-    cp_c_name: string;
-    cp_c_code: number;
+    cp_c_name: string | null;
+    cp_c_code: number | null;
     points: number;
 
     constructor(obj: NewJobEntity) {
@@ -28,8 +28,10 @@ export class JobRecord implements JobEntity {
             throw new ValidationError('Nazwa Checkpointu B nie może być dłuższa niż 36 znaków.');
         }
 
-        if (!obj.cp_c_name || obj.cp_c_name.length > 36) {
-            throw new ValidationError('Nazwa Checkpointu C nie może być dłuższa niż 36 znaków.');
+        if (obj.cp_c_name !== null) {
+            if (obj.cp_c_name.length > 36) {
+                throw new ValidationError('Nazwa Checkpointu C nie może być dłuższa niż 36 znaków.');
+            }
         }
 
         this.id = obj.id;
@@ -56,10 +58,6 @@ export class JobRecord implements JobEntity {
         } else {
             throw new Error('Nie można stworzyć tego zadania, ponieważ już istnieje.')
         }
-
-        // codeGenerator(1000, 9999, this.cp_a_code, 'Nie można użyć tego kodu, ponieważ już istnieje.');
-        // codeGenerator(1000, 9999, this.cp_b_code, 'Nie można użyć tego kodu, ponieważ już istnieje.');
-        // codeGenerator(1000, 9999, this.cp_c_code, 'Nie można użyć tego kodu, ponieważ już istnieje.');
 
         if (!this.cp_a_code || this.cp_a_code < 1000 || this.cp_a_code > 9999) {
             this.cp_a_code = codeGenerator(1000, 9999);

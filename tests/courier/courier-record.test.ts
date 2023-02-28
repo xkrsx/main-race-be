@@ -47,19 +47,19 @@ test('Password must be in a range between 1000 and 9999.', () => {
     expect(() => new CourierRecord({
         ...defaultObject,
         password: null,
-    }))
+    })).toThrow('Password must be in a range between 1000')
 });
 
 test('Password must be in a range between 1000 and 9999.', () => {
     expect(() => new CourierRecord({
         ...defaultObject,
         password: 10000,
-    }))
+    })).toThrow('')
 });
 
 test('Category may not be empty.', () => {
     expect(() => new CourierRecord({
         ...defaultObject,
         category: ''
-    }))
+    })).toThrow('Category may not be empty')
 });

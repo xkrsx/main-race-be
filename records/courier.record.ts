@@ -48,8 +48,6 @@ export class CourierRecord implements CourierEntity {
             throw new Error('Nie można stworzyć tego zawodnika, ponieważ już istnieje.');
         }
 
-        // codeGenerator(1000, 9999, this.password, 'Nie można użyć tego hasła, ponieważ już istnieje.');
-
         if (!this.password || this.password < 1000 || this.password > 9999) {
             this.password = codeGenerator(1000, 9999);
         } else {
