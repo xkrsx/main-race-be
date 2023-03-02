@@ -1,4 +1,4 @@
-import {CourierEntity, NewCourierEntity} from "../types";
+import {CourierEntity, NewCourierEntity, Category} from "../types";
 import {ValidationError} from "../utils/errors";
 import {pool} from "../utils/db";
 import {v4 as uuid} from "uuid";
@@ -12,7 +12,7 @@ export class CourierRecord implements CourierEntity {
     public number: number;
     public name: string;
     public password: number;
-    public category: string;
+    public category: Category;
 
     constructor(obj: NewCourierEntity) {
         if (!obj.number || obj.number < 0 || obj.number > 999) {
