@@ -1,4 +1,4 @@
-import {CourierEntity, NewCourierEntity, Category} from "../types";
+import {Category, CourierEntity, NewCourierEntity} from "../types";
 import {ValidationError} from "../utils/errors";
 import {pool} from "../utils/db";
 import {v4 as uuid} from "uuid";
@@ -8,42 +8,46 @@ import {codeGenerator} from "../utils/code-generator";
 type CourierRecordResults = [CourierEntity[], FieldPacket[]];
 
 export class CourierRecord implements CourierEntity {
-    public id: string;
-    public number: number;
-    public name: string;
+    public courierId: string;
+    public courierNumber: number;
+    public courierName: string;
     public password: number;
     public category: Category;
+    public courierPoints: number;
+    public courierPenalties: number;
 
     constructor(obj: NewCourierEntity) {
-        if (!obj.number || obj.number < 0 || obj.number > 999) {
+
+        if (!obj.courierNumber || obj.courierNumber < 0 || obj.courierNumber > 999) {
             throw new ValidationError('Numer musi pochodzić z zakresu od 0 do 999.');
         }
 
-        if (!obj.name || obj.name.length > 15) {
+        if (!obj.courierName || obj.courierName.length > 15) {
             throw new ValidationError('Imię/ksywa nie może być pusta, ani przekraczać 15 znaków.');
         }
 
         if (!obj.category) {
             throw new ValidationError('Zawodnik musi być przypisany do kategorii.');
         }
-
-        this.id = obj.id;
-        this.number = obj.number;
-        this.name = obj.name;
+        this.courierId = obj.courierId;
+        this.courierNumber = obj.courierNumber;
+        this.courierName = obj.courierName;
         this.password = obj.password;
         this.category = obj.category;
+        this.courierPoints = obj.courierPoints;
+        this.courierPenalties = obj.courierPenalties;
     }
 
-    static async getOne(id: string): Promise<CourierRecord | null> {
+    static async getSingleCourier(id: string): Promise<CourierRecord | null> {
         const [results] = await pool.execute("SELECT * FROM `couriers` WHERE id = :id", {
-            id
+            id,
         }) as CourierRecordResults;
         return results.length === 0 ? null : new CourierRecord(results[0]);
     }
 
     async insert(): Promise<string> {
-        if (!this.id) {
-            this.id = uuid();
+        if (!this.courierId) {
+            this.courierId = uuid();
         } else {
             throw new Error('Nie można stworzyć tego zawodnika, ponieważ już istnieje.');
         }
@@ -54,15 +58,16 @@ export class CourierRecord implements CourierEntity {
             throw new Error('Nie można użyć tego hasła, ponieważ jest błędne.');
         }
 
-        await pool.execute("INSERT INTO `couriers` (`id`, `number`, `name`, `password`, `category`) VALUES (:id, :number, :name, :password, :category)", this);
+        await pool.execute("INSERT INTO `couriers` (`courierId`, `courierNumber`, `courierName`, `password`, `category`) VALUES (:id, :number, :name, :password, :category)", this);
 
-        return this.id;
+        return this.courierId;
     }
 
-    static async findAll(): Promise<CourierRecord[]> {
-        const [results] = await pool.execute("SELECT * FROM `couriers_jobs` ORDER BY `sum`") as CourierRecordResults;
+    static async getResults(): Promise<CourierRecord[]> {
+        const [results] = await pool.execute("SELECT * FROM `couriers_jobs` ORDER BY `courierPoints`") as CourierRecordResults;
 
         return results.map(obj => new CourierRecord(obj));
     }
+
 
 }

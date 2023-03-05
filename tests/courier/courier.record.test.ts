@@ -43,7 +43,7 @@ test('Name may not be empty or has more than 15 characters.', () => {
     })).toThrow('Imię/ksywa nie może być pusta, ani przekraczać 15 znaków.')
 });
 
-//@TODO: sprawdzić ten test
+//@TODO poprawić ten test
 test('Password must be in a range between 1000 and 9999.', () => {
     expect(() => new CourierRecord({
         ...defaultObject,

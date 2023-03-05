@@ -1,20 +1,27 @@
+import {JobEntity} from "../job";
+
 export enum Category {
     Open = 'open',
     WTNB = 'wtnb',
 }
 
-export interface NewCourierEntity extends Omit<CourierEntity, 'id' | 'password'> {
-    id?: string;
+export interface NewCourierEntity extends Omit<CourierEntity, 'courierId' | 'password'> {
+    courierId?: string;
     password?: number
 }
 
 export interface SimpleCourierEntity {
-    number: number;
-    name: string;
+    courierNumber: number;
+    courierName: string;
     category: Category;
 }
 
 export interface CourierEntity extends SimpleCourierEntity {
-    id: string;
+    courierId: string;
     password: number;
+    courierPoints: number;
+    courierPenalties: number;
+}
+
+export interface CourierViewEntity extends Omit<CourierEntity, 'password'>, JobEntity {
 }

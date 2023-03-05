@@ -13,7 +13,7 @@ afterAll(async () => {
 });
 
 test('CourierRecord returns data from database for a single entry.', async () => {
-    const courier = await CourierRecord.getOne('abc')
+    const courier = await CourierRecord.getSingleCourier('abc')
 
     expect(courier).toBeDefined();
     expect(courier.id).toEqual('abc');
@@ -24,7 +24,7 @@ test('CourierRecord returns data from database for a single entry.', async () =>
 });
 
 test('CourierRecord.getOne returns null from database for non-existing entry.', async () => {
-    const courier = await CourierRecord.getOne('abcdef');
+    const courier = await CourierRecord.getSingleCourier('abcdef');
 
     expect(courier).toBeNull();
 });
@@ -62,7 +62,7 @@ test('CourierRecord.insert inserts data to database.', async () => {
 
     await courier.insert();
 
-    const foundCourier = await CourierRecord.getOne(courier.id);
+    const foundCourier = await CourierRecord.getSingleCourier(courier.id);
 
     expect(foundCourier).toBeDefined();
     expect(foundCourier).not.toBeNull();
