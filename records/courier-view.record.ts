@@ -3,7 +3,7 @@ import {FieldPacket} from "mysql2";
 import {ValidationError} from "../utils/errors";
 import {pool} from "../utils/db";
 
-type CourierViewResults = [CourierViewEntity[], FieldPacket[]];
+export type CourierViewResults = [CourierViewEntity[], FieldPacket[]];
 
 export class CourierViewRecord implements CourierViewEntity {
     courierId: string;
@@ -56,7 +56,7 @@ export class CourierViewRecord implements CourierViewEntity {
 
     static async getOne(id: string): Promise<any> {
         const [results] = await pool.execute(
-            "SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints FROM couriers JOIN couriers_jobs ON couriers.courierId = couriers_jobs.courierId JOIN jobs ON couriers_jobs.jobId = jobs.jobId WHERE couriers.courierId = :id", {
+            "SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints FROM couriers JOIN couriers_jobs ON couriers.courierId = couriers_jobs.courierId JOIN jobs ON couriers_jobs.jobId = jobs.jobId WHERE couriers.courierId = :id", {
                 id
             }) as CourierViewResults;
         return results.map(obj => new CourierViewRecord(obj));
