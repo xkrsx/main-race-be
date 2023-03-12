@@ -2,24 +2,35 @@ import express, {json} from "express";
 import cors from "cors";
 import 'express-async-errors';
 import {handleError} from "./utils/errors";
-import {CourierViewRecord} from "./records/courier-view.record";
+import rateLimit from 'express-rate-limit';
+import {loginRouter} from "./routers/login";
 
 const app = express();
 
 app.use(cors({
     origin: 'http://localhost:3000',
 }));
+
 app.use(json());
+app.use(rateLimit({
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+}))
 
-app.get('/', (req, res) => {
-    throw new Error('oopsie');
-})
+app.use('/login', loginRouter);
+// app.use('/results', resultsRouter);
+// app.use('/admin', adminRouter);
+// app.use('/english', englishRouter);
 
-const test = async () => {
-    const results = await CourierViewRecord.getOne('abc');
-    console.log(results);
-};
-test();
+// app.get('/', (req, res) => {
+//     throw new Error('oopsie');
+// })
+
+// const test = async () => {
+//     const results = await CourierViewRecord.getOne('abc');
+//     console.log(results);
+// };
+// test();
 
 app.use(handleError);
 
