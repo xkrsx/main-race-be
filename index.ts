@@ -22,16 +22,6 @@ app.use('/login', loginRouter);
 // app.use('/admin', adminRouter);
 // app.use('/english', englishRouter);
 
-// app.get('/', (req, res) => {
-//     throw new Error('oopsie');
-// })
-
-// const test = async () => {
-//     const results = await CourierViewRecord.getOne('abc');
-//     console.log(results);
-// };
-// test();
-
 app.use(handleError);
 
 app.listen(3001, '0.0.0.0', () => {

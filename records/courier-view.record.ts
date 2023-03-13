@@ -21,6 +21,8 @@ export class CourierViewRecord implements CourierViewEntity {
     cp_c_name: string;
     cp_c_code: number;
     jobPoints: number;
+    jobPenalties: number;
+    finished: boolean;
 
     constructor(obj: CourierViewEntity) {
 
@@ -50,13 +52,14 @@ export class CourierViewRecord implements CourierViewEntity {
         this.cp_c_name = obj.cp_c_name;
         this.cp_c_code = obj.cp_c_code;
         this.jobPoints = obj.jobPoints;
+        this.jobPenalties = obj.jobPenalties;
+        this.finished = obj.finished;
     }
-
 
 
     static async getOne(id: string): Promise<any> {
         const [results] = await pool.execute(
-            "SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints FROM couriers JOIN couriers_jobs ON couriers.courierId = couriers_jobs.courierId JOIN jobs ON couriers_jobs.jobId = jobs.jobId WHERE couriers.courierId = :id", {
+            "SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints, couriers_jobs.jobPenalties, couriers_jobs.finished FROM couriers JOIN couriers_jobs ON couriers.courierNumber = couriers_jobs.courierNumber JOIN jobs ON couriers_jobs.jobNumber = jobs.jobNumber WHERE couriers.courierId = :id", {
                 id
             }) as CourierViewResults;
         return results.map(obj => new CourierViewRecord(obj));
