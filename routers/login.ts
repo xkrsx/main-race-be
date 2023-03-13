@@ -3,10 +3,10 @@ import {CourierViewRecord} from "../records/courier-view.record";
 
 export const loginRouter = Router();
 
+    // @TODO pobierać id po logowaniu
 loginRouter
     .get('/', async (req, res) => {
-        //@TODO pobierać id po logowaniu
-        const courierViewList = await CourierViewRecord.getOne("abc");
+        const courierViewList = await CourierViewRecord.getOne(111);
 
         res.json({
             courierViewList,

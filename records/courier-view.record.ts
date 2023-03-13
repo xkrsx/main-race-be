@@ -1,11 +1,14 @@
-import {Category, CourierViewEntity} from "../types";
 import {FieldPacket} from "mysql2";
-import {ValidationError} from "../utils/errors";
+import {v4 as uuid} from "uuid";
 import {pool} from "../utils/db";
+import {Category, CourierViewEntity} from "../types";
+import {ValidationError} from "../utils/errors";
+import {codeGenerator} from "../utils/code-generator";
 
 export type CourierViewResults = [CourierViewEntity[], FieldPacket[]];
 
 export class CourierViewRecord implements CourierViewEntity {
+    id: string;
     courierId: string;
     courierNumber: number;
     courierName: string;
@@ -37,6 +40,8 @@ export class CourierViewRecord implements CourierViewEntity {
         if (!obj.category) {
             throw new ValidationError('Zawodnik musi być przypisany do kategorii.');
         }
+
+        this.id = obj.id;
         this.courierId = obj.courierId;
         this.courierNumber = obj.courierNumber;
         this.courierName = obj.courierName;
@@ -57,12 +62,31 @@ export class CourierViewRecord implements CourierViewEntity {
     }
 
 
-    static async getOne(id: string): Promise<any> {
+    static async getOne(courierNumber: number): Promise<any> {
         const [results] = await pool.execute(
-            "SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints, couriers_jobs.jobPenalties, couriers_jobs.finished FROM couriers JOIN couriers_jobs ON couriers.courierNumber = couriers_jobs.courierNumber JOIN jobs ON couriers_jobs.jobNumber = jobs.jobNumber WHERE couriers.courierId = :id", {
-                id
+            "SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints, couriers_jobs.jobPenalties, couriers_jobs.finished FROM couriers JOIN couriers_jobs ON couriers.courierNumber = couriers_jobs.courierNumber JOIN jobs ON couriers_jobs.jobNumber = jobs.jobNumber WHERE couriers.courierNumber = :courierNumber", {
+                courierNumber
             }) as CourierViewResults;
         return results.map(obj => new CourierViewRecord(obj));
+    }
+
+    async insert(courierNumber: number, jobNumber?: number): Promise<string> {
+        if (!this.id) {
+            this.id = uuid();
+        } else {
+            throw new Error("Cannot insert this job - it already exists.")
+        }
+
+        if (!this.jobNumber) {
+            this.jobNumber = codeGenerator(1, 10);
+        }
+
+        await pool.execute("INSERT INTO `couriers_jobs` (`id`, `courierNumber`, `jobNumber`, `pickup`, `dropoff`, `jobPenalties`, `finished`) VALUES (NULL, :courierNumber, :jobNumber, CURRENT_TIMESTAMP, NULL, NULL, NULL)", {
+            courierNumber,
+            jobNumber,
+        });
+
+        return this.id;
     }
 
 }

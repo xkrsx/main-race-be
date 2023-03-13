@@ -24,6 +24,7 @@ export interface CourierEntity extends SimpleCourierEntity {
 }
 
 export interface CourierViewEntity extends Omit<CourierEntity, 'password'>, JobEntity {
+    id: string;
     jobPenalties: number;
     finished: boolean;
 }
