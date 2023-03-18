@@ -4,6 +4,7 @@ import 'express-async-errors';
 import {handleError} from "./utils/errors";
 import rateLimit from 'express-rate-limit';
 import {loginRouter} from "./routers/login";
+import {CourierViewRecord} from "./records/courier-view.record";
 
 const app = express();
 
@@ -21,6 +22,13 @@ app.use('/login', loginRouter);
 // app.use('/results', resultsRouter);
 // app.use('/admin', adminRouter);
 // app.use('/english', englishRouter);
+
+// const test = async (req: any, res: any) => {
+//     const newJob = new CourierViewRecord(req.body);
+//     await newJob.insert(267);
+//     console.log(res.json(newJob));
+// };
+// test();
 
 app.use(handleError);
 
