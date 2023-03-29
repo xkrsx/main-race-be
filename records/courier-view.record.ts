@@ -62,7 +62,7 @@ export class CourierViewRecord implements CourierViewEntity {
     }
 
 
-    static async getOne(courierNumber: number): Promise<any> {
+    static async getAllJobsOfOne(courierNumber: number): Promise<any> {
         const [results] = await pool.execute(
             "SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints, couriers_jobs.jobPenalties, couriers_jobs.finished FROM couriers JOIN couriers_jobs ON couriers.courierNumber = couriers_jobs.courierNumber JOIN jobs ON couriers_jobs.jobNumber = jobs.jobNumber WHERE couriers.courierNumber = :courierNumber ORDER BY couriers_jobs.jobNumber ASC", {
                 courierNumber
