@@ -24,7 +24,7 @@ loginRouter
     })
 
     //@TODO poprawić, żeby było uniwersalne dla wszystkich kolumn finished
-    .patch('/update/:jobId', async (req: Request, res: Response) => {
+    .patch('/finishedA/:jobId', async (req: Request, res: Response) => {
         const id = req.params.jobId;
         const finishedA = req.body;
 
