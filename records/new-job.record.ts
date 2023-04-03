@@ -8,7 +8,7 @@ interface NewJobBtnEntity {
     courierNumber: number;
     jobNumber: number;
     jobPenalties: 0;
-    finished: boolean;
+    finishedJob: boolean;
 }
 
 export class NewJobRecord implements NewJobBtnEntity {
@@ -16,7 +16,7 @@ export class NewJobRecord implements NewJobBtnEntity {
     courierNumber: number;
     jobNumber: number;
     jobPenalties: 0;
-    finished: boolean;
+    finishedJob: boolean;
 
     constructor(obj: NewJobBtnEntity) {
         if (!obj.courierNumber || obj.courierNumber < 0 || obj.courierNumber > 999) {
@@ -27,7 +27,7 @@ export class NewJobRecord implements NewJobBtnEntity {
         this.courierNumber = obj.courierNumber;
         this.jobNumber = obj.jobNumber;
         this.jobPenalties = obj.jobPenalties;
-        this.finished = obj.finished;
+        this.finishedJob = obj.finishedJob;
     }
 
     async insert(courierNumber: number): Promise<string> {
@@ -41,7 +41,7 @@ export class NewJobRecord implements NewJobBtnEntity {
             this.jobNumber = codeGenerator(1, 10);
         }
 
-        await pool.execute("INSERT INTO `couriers_jobs` (`id`, `courierNumber`, `jobNumber`, `pickup`, `dropoff`, `jobPenalties`, `finished`) VALUES (:id, :courierNumber, :jobNumber, CURRENT_TIMESTAMP, NULL, NULL, NULL)", {
+        await pool.execute("INSERT INTO `couriers_jobs` (`id`, `courierNumber`, `jobNumber`, `pickup`, `dropoff`, `finishedJob`) VALUES (:id, :courierNumber, :jobNumber, CURRENT_TIMESTAMP, NULL, NULL)", {
             id: this.id,
             courierNumber: this.courierNumber,
             jobNumber: this.jobNumber,
