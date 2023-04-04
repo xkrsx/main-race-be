@@ -64,7 +64,7 @@ export class CourierViewRecord implements CourierViewEntity {
         this.jobPoints = obj.jobPoints;
         this.jobPenalties = obj.jobPenalties;
         this.finishedJob = obj.finishedJob;
-    }
+    };
 
     static async getAllJobsOfOne(courierNumber: number): Promise<any> {
         const [results] = await pool.execute(
@@ -72,25 +72,35 @@ export class CourierViewRecord implements CourierViewEntity {
                 courierNumber
             }) as CourierViewResults;
         return results.map(obj => new CourierViewRecord(obj));
-    }
+    };
 
     static async getSingleJobOfOne(id: string): Promise<any> {
         const [results] = await pool.execute("SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints, couriers_jobs.id, couriers_jobs.finishedA, couriers_jobs.finishedB, couriers_jobs.finishedC, .couriers_jobs.jobPenalties, couriers_jobs.finishedJob FROM couriers JOIN couriers_jobs ON couriers.courierNumber = couriers_jobs.courierNumber JOIN jobs ON couriers_jobs.jobNumber = jobs.jobNumber WHERE couriers_jobs.id = :id", {
             id
         }) as CourierViewResults;
         return results.length === 0 ? null : new CourierViewRecord(results[0]);
-    }
+    };
 
-    async update(): Promise<string> {
+    async updateA(): Promise<string> {
         if (!this.id) {
             throw new Error("Cannot update this job - it does not exist!")
         } else {
             await pool.execute("UPDATE `couriers_jobs` SET `finishedA` = 1 WHERE `id` = :id", {
                 id: this.id,
             });
-
             return this.id;
         }
-    }
+    };
+
+    async updateB(): Promise<string> {
+        if (!this.id) {
+            throw new Error("Cannot update this job - it does not exist!")
+        } else {
+            await pool.execute("UPDATE `couriers_jobs` SET `finishedB` = 1 WHERE `id` = :id", {
+                id: this.id,
+            });
+            return this.id;
+        }
+    };
 
 }
