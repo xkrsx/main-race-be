@@ -96,7 +96,7 @@ export class CourierViewRecord implements CourierViewEntity {
         if (!this.id) {
             throw new Error("Cannot update this job - it does not exist!")
         } else {
-            await pool.execute("UPDATE `couriers_jobs` SET `finishedB` = 1 WHERE `id` = :id", {
+            await pool.execute("UPDATE `couriers_jobs` SET `finishedB` = 1, `jobPenalties` = 0, `finishedJob` = 1 WHERE `id` = :id", {
                 id: this.id,
             });
             return this.id;

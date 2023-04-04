@@ -37,7 +37,7 @@ loginRouter
     })
     .patch('/finishedB/:jobId', async (req: Request, res: Response) => {
         const id = req.params.jobId;
-        const finishedB = req.body;
+        const {finishedB, jobPenalties, finishedJob} = req.body;
 
         const job = await CourierViewRecord.getSingleJobOfOne(id);
         if (job === null) {
@@ -45,5 +45,7 @@ loginRouter
         }
 
         job.finishedB = finishedB === null ? null : finishedB;
+        job.jobPenalties = jobPenalties === null ? null : jobPenalties;
+        job.finishedJob = finishedJob === null ? null : finishedJob;
         await job.updateB();
     })
