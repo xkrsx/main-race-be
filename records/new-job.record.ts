@@ -41,7 +41,7 @@ export class NewJobRecord implements NewJobBtnEntity {
             this.jobNumber = codeGenerator(1, 10);
         }
 
-        await pool.execute("INSERT INTO `couriers_jobs` (`id`, `courierNumber`, `jobNumber`, `pickup`, `dropoff`, `finishedJob`) VALUES (:id, :courierNumber, :jobNumber, CURRENT_TIMESTAMP, NULL, NULL)", {
+        await pool.execute("INSERT INTO `couriers_jobs` (`id`, `courierNumber`, `jobNumber`) VALUES (:id, :courierNumber, :jobNumber)", {
             id: this.id,
             courierNumber: this.courierNumber,
             jobNumber: this.jobNumber,

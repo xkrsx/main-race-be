@@ -17,16 +17,16 @@ export class CourierViewRecord implements CourierViewEntity {
     jobNumber: number;
     cp_a_name: string;
     cp_a_code: number;
-    finishedA: boolean;
+    finishedA: number;
     cp_b_name: string;
     cp_b_code: number;
-    finishedB: boolean;
+    finishedB: number;
     cp_c_name: string;
     cp_c_code: number;
-    finishedC: boolean;
+    finishedC: number;
     jobPoints: number;
     jobPenalties: number;
-    finishedJob: boolean;
+    finishedJob: number;
 
 
     constructor(obj: CourierViewEntity) {
