@@ -11,7 +11,7 @@ interface NewJobBtnEntity {
     finishedJob: boolean;
 }
 
-export class NewJobRecord implements NewJobBtnEntity {
+export class CourierNewJobRecord implements NewJobBtnEntity {
     id?: string;
     courierNumber: number;
     jobNumber: number;

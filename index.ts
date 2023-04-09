@@ -3,8 +3,7 @@ import cors from "cors";
 import 'express-async-errors';
 import {handleError} from "./utils/errors";
 import rateLimit from 'express-rate-limit';
-import {loginRouter} from "./routers/login";
-import {CourierViewRecord} from "./records/courier-view.record";
+import {raceRouter} from "./routers/race";
 
 const app = express();
 
@@ -18,7 +17,7 @@ app.use(rateLimit({
     max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
 }))
 
-app.use('/login', loginRouter);
+app.use('/race', raceRouter);
 // app.use('/results', resultsRouter);
 // app.use('/admin', adminRouter);
 // app.use('/english', englishRouter);

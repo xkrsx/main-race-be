@@ -1,31 +1,15 @@
 import {Request, Response, Router} from "express";
 import {CourierViewRecord} from "../records/courier-view.record";
-import {NewJobRecord} from "../records/new-job.record";
+import {CourierNewJobRecord} from "../records/courier-new-job.record";
 import {ValidationError} from "../utils/errors";
 
-export const loginRouter = Router();
+export const raceRouter = Router();
 
-loginRouter
-    .get('/', async (req, res) => {
-// @TODO pobierać id po logowaniu
-        const courierViewList = await CourierViewRecord.getAllJobsOfOne(111);
-
-        res.json({
-            courierViewList,
-        });
-    })
-
-    .post('/', async (req: Request, res: Response) => {
-        const newJob = new NewJobRecord(req.body);
-        await newJob.insert(req.body);
-
-        res.json(newJob);
-    })
-
-    //@TODO poprawić, żeby było uniwersalne dla wszystkich kolumn finished
-    .patch('/finishedA/:jobId', async (req: Request, res: Response) => {
+raceRouter
+    .patch('/finishedA/:jobId/', async (req: Request, res: Response) => {
         const id = req.params.jobId;
         const finishedA = req.body;
+        console.log(req);
 
         const job = await CourierViewRecord.getSingleJobOfOne(id);
         if (job === null) {
@@ -48,4 +32,17 @@ loginRouter
         job.jobPenalties = jobPenalties === null ? null : jobPenalties;
         job.finishedJob = finishedJob === null ? null : finishedJob;
         await job.updateB();
+    })
+    .get('/:courierNumber/', async (req, res) => {
+        const courierViewList = await CourierViewRecord.getAllJobsOfOne(Number(req.params.courierNumber));
+
+        res.json({
+            courierViewList,
+        });
+    })
+    .post('/', async (req: Request, res: Response) => {
+        const newJob = new CourierNewJobRecord(req.body);
+        await newJob.insert(req.body);
+
+        res.json(newJob);
     })

@@ -7,7 +7,7 @@ import {codeGenerator} from "../utils/code-generator";
 
 type JobRecordResults = [JobEntity[], FieldPacket[]];
 
-export class JobRecord implements JobEntity {
+export class AdminNewJobRecord implements JobEntity {
     jobId: string;
     jobNumber: number;
     cp_a_name: string;
@@ -45,11 +45,11 @@ export class JobRecord implements JobEntity {
     }
 
 
-    static async getOne(id: string): Promise<JobRecord | null> {
+    static async getOne(id: string): Promise<AdminNewJobRecord | null> {
         const [results] = await pool.execute("SELECT * FROM `jobs` WHERE id = :id", {
             id
         }) as JobRecordResults;
-        return results.length === 0 ? null : new JobRecord(results[0]);
+        return results.length === 0 ? null : new AdminNewJobRecord(results[0]);
     }
 
     async insert(): Promise<string> {
@@ -84,9 +84,9 @@ export class JobRecord implements JobEntity {
         return this.jobId;
     }
 
-    static async findAll(): Promise<JobRecord[]> {
+    static async findAll(): Promise<AdminNewJobRecord[]> {
         const [results] = await pool.execute("SELECT * FROM `jobs`") as JobRecordResults;
 
-        return results.map(obj => new JobRecord(obj));
+        return results.map(obj => new AdminNewJobRecord(obj));
     }
 }

@@ -1,5 +1,5 @@
 import {pool} from "../../utils/db";
-import {JobRecord} from "../../records/job.record";
+import {AdminNewJobRecord} from "../../records/admin-new-job.record";
 
 const defaultObject = {
     cp_a_name: '[TEST] CP A',
@@ -13,8 +13,8 @@ afterAll(async () => {
     await pool.end();
 })
 
-test('JobRecord returns data from database for a single entry.', async () => {
-    const job = await JobRecord.getOne('abc')
+test('AdminNewJobRecord returns data from database for a single entry.', async () => {
+    const job = await AdminNewJobRecord.getOne('abc')
 
     expect(job).toBeDefined();
     expect(job.id).toEqual('abc');
@@ -28,21 +28,21 @@ test('JobRecord returns data from database for a single entry.', async () => {
     expect(job.points).toEqual(100);
 });
 
-test('JobRecord.getOne returns null from database for non-existing entry.', async () => {
-    const job = await JobRecord.getOne('abcdef');
+test('AdminNewJobRecord.getOne returns null from database for non-existing entry.', async () => {
+    const job = await AdminNewJobRecord.getOne('abcdef');
 
     expect(job).toBeNull();
 });
 
-test('JobRecord.findAll returns array of found entries.', async () => {
-    const jobs = await JobRecord.findAll();
+test('AdminNewJobRecord.findAll returns array of found entries.', async () => {
+    const jobs = await AdminNewJobRecord.findAll();
 
     expect(jobs).not.toEqual([]);
     expect(jobs[0].id).toBeDefined();
 });
 
-test('JobRecord.insert returns new UUID and correct codes for CP A, CP B and CP C.', async () => {
-    const job = new JobRecord(defaultObject);
+test('AdminNewJobRecord.insert returns new UUID and correct codes for CP A, CP B and CP C.', async () => {
+    const job = new AdminNewJobRecord(defaultObject);
 
     await job.insert();
 
@@ -62,12 +62,12 @@ test('JobRecord.insert returns new UUID and correct codes for CP A, CP B and CP 
     expect(job.cp_c_code).toBeLessThanOrEqual(9999);
 });
 
-test('JobRecord.insert inserts data to database.', async () => {
-    const job = new JobRecord(defaultObject);
+test('AdminNewJobRecord.insert inserts data to database.', async () => {
+    const job = new AdminNewJobRecord(defaultObject);
 
     await job.insert();
 
-    const foundJob = await JobRecord.getOne(job.id);
+    const foundJob = await AdminNewJobRecord.getOne(job.id);
 
     expect(foundJob).toBeDefined();
     expect(foundJob).not.toBeNull();
@@ -75,11 +75,11 @@ test('JobRecord.insert inserts data to database.', async () => {
 });
 
 test('Job DB inserts correct AI on number column.', async () => {
-    const job = new JobRecord(defaultObject);
+    const job = new AdminNewJobRecord(defaultObject);
 
     await job.insert();
 
-    const foundJob = await JobRecord.getOne(job.id);
+    const foundJob = await AdminNewJobRecord.getOne(job.id);
 
     expect(foundJob.number).toBeDefined();
     expect(typeof foundJob.number).toEqual('number');

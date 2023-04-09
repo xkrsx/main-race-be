@@ -1,4 +1,4 @@
-import {JobRecord} from "../../records/job.record"
+import {AdminNewJobRecord} from "../../records/admin-new-job.record"
 
 const defaultObject = {
     cp_a_name: 'CP A',
@@ -10,8 +10,8 @@ const defaultObject = {
     points: 100,
 }
 
-test('Can build JobRecord', () => {
-    const job = new JobRecord(defaultObject);
+test('Can build AdminNewJobRecord', () => {
+    const job = new AdminNewJobRecord(defaultObject);
     expect(job.cp_a_name).toBe('CP A');
     expect(job.cp_a_code).toBe(1111);
     expect(job.cp_b_name).toBe('CP B');
@@ -22,7 +22,7 @@ test('Can build JobRecord', () => {
 });
 
 test('CP C and CP C code may be empty.', () => {
-    expect(() => new JobRecord({
+    expect(() => new AdminNewJobRecord({
         ...defaultObject,
         cp_c_name: null,
         cp_c_code: null,
