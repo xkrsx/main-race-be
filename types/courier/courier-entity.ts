@@ -16,6 +16,11 @@ export interface SimpleCourierEntity {
     category: Category;
 }
 
+export interface LoginCourierEntity {
+    courierNumber: number;
+    password: number;
+}
+
 export interface CourierEntity extends SimpleCourierEntity {
     courierId: string;
     password: number;

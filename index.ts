@@ -4,6 +4,7 @@ import 'express-async-errors';
 import {handleError} from "./utils/errors";
 import rateLimit from 'express-rate-limit';
 import {raceRouter} from "./routers/race";
+import {loginRouter} from "./routers/login";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(rateLimit({
     max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
 }))
 
+app.use('/login', loginRouter);
 app.use('/race', raceRouter);
 // app.use('/results', resultsRouter);
 // app.use('/admin', adminRouter);
