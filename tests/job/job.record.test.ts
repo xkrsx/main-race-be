@@ -7,7 +7,7 @@ const defaultObject = {
     cp_b_code: 2222,
     cp_c_name: 'CP C',
     cp_c_code: 3333,
-    points: 100,
+    jobPoints: 100,
 }
 
 test('Can build AdminNewJobRecord', () => {
@@ -18,13 +18,13 @@ test('Can build AdminNewJobRecord', () => {
     expect(job.cp_b_code).toBe(2222);
     expect(job.cp_c_name).toBe('CP C');
     expect(job.cp_c_code).toBe(3333);
-    expect(job.points).toBe(100);
+    expect(job.jobPoints).toBe(100);
 });
 
 test('CP C and CP C code may be empty.', () => {
     expect(() => new AdminNewJobRecord({
         ...defaultObject,
-        cp_c_name: null,
-        cp_c_code: null,
+        cp_c_name: undefined,
+        cp_c_code: undefined,
     })).not.toThrow();
 });

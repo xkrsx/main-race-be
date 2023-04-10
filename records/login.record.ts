@@ -14,7 +14,7 @@ export class LoginRecord implements LoginCourierEntity {
             throw new ValidationError('Numer musi pochodzić z zakresu od 0 do 999.');
         }
         if (!obj.password || obj.password < 1000 || obj.password > 9999) {
-            throw new ValidationError('Hasło musi pochodzić z zakresu od 0 do 999.');
+            throw new ValidationError('Hasło musi pochodzić z zakresu od 0 do 9999.');
         }
 
         this.courierNumber = obj.courierNumber;
@@ -27,6 +27,6 @@ export class LoginRecord implements LoginCourierEntity {
                 courierNumber,
                 password,
             }) as LoginCourierResults;
-        return results.length === 0 ? null : new LoginRecord(results[0]);
+        return results.length !== 0;
     }
 }
