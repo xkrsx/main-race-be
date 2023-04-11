@@ -7,7 +7,7 @@ interface NewJobBtnEntity {
     id?: string;
     courierNumber: number;
     jobNumber: number;
-    jobPenalties: 0;
+    jobPenalties: 20;
     finishedJob: boolean;
 }
 
@@ -15,7 +15,7 @@ export class CourierNewJobRecord implements NewJobBtnEntity {
     id?: string;
     courierNumber: number;
     jobNumber: number;
-    jobPenalties: 0;
+    jobPenalties: 20;
     finishedJob: boolean;
 
     constructor(obj: NewJobBtnEntity) {
@@ -37,6 +37,7 @@ export class CourierNewJobRecord implements NewJobBtnEntity {
             throw new Error("Cannot insert this job - it already exists.")
         }
 
+        //@TODO dodać mysql który czyta ilość rekordów w tabeli jobs i podaje jako wartość max w generatorze
         if (!this.jobNumber) {
             this.jobNumber = codeGenerator(1, 10);
         }
@@ -46,6 +47,11 @@ export class CourierNewJobRecord implements NewJobBtnEntity {
             courierNumber: this.courierNumber,
             jobNumber: this.jobNumber,
         });
+
+        await pool.execute("UPDATE `couriers` SET `courierPenalties` = `courierPenalties` + 20 WHERE `courierNumber` = :courierNumber", {
+            // jobPenalties: this.jobPenalties,
+            courierNumber: this.courierNumber,
+        })
 
         return this.id;
     }

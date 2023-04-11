@@ -9,7 +9,6 @@ raceRouter
     .patch('/finishedA/:jobId/', async (req: Request, res: Response) => {
         const id = req.params.jobId;
         const finishedA = req.body;
-        console.log(req);
 
         const job = await CourierViewRecord.getSingleJobOfOne(id);
         if (job === null) {
@@ -21,7 +20,7 @@ raceRouter
     })
     .patch('/finishedB/:jobId', async (req: Request, res: Response) => {
         const id = req.params.jobId;
-        const {finishedB, jobPenalties, finishedJob} = req.body;
+        const {courierNumber, finishedB, jobPenalties, finishedJob, jobPoints} = req.body;
 
         const job = await CourierViewRecord.getSingleJobOfOne(id);
         if (job === null) {
@@ -31,7 +30,8 @@ raceRouter
         job.finishedB = finishedB === null ? null : finishedB;
         job.jobPenalties = jobPenalties === null ? null : jobPenalties;
         job.finishedJob = finishedJob === null ? null : finishedJob;
-        await job.updateB();
+
+        await job.updateB(courierNumber, jobPenalties, jobPoints);
     })
     .get('/:courierNumber/', async (req, res) => {
         const courierViewList = await CourierViewRecord.getAllJobsOfOne(Number(req.params.courierNumber));
