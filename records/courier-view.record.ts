@@ -27,6 +27,7 @@ export class CourierViewRecord implements CourierViewEntity {
     jobPoints: number;
     jobPenalties: number;
     finishedJob: number;
+    sum: number;
 
 
     constructor(obj: CourierViewEntity) {
@@ -64,11 +65,12 @@ export class CourierViewRecord implements CourierViewEntity {
         this.jobPoints = obj.jobPoints;
         this.jobPenalties = obj.jobPenalties;
         this.finishedJob = obj.finishedJob;
+        this.sum = obj.sum;
     };
 
     static async getAllJobsOfOne(courierNumber: number): Promise<any> {
         const [results] = await pool.execute(
-            "SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints, couriers_jobs.id, couriers_jobs.finishedA, couriers_jobs.finishedB, couriers_jobs.finishedC, .couriers_jobs.jobPenalties, couriers_jobs.finishedJob FROM couriers JOIN couriers_jobs ON couriers.courierNumber = couriers_jobs.courierNumber JOIN jobs ON couriers_jobs.jobNumber = jobs.jobNumber WHERE couriers.courierNumber = :courierNumber ORDER BY couriers_jobs.jobNumber ASC", {
+            "SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints, couriers_jobs.id, couriers_jobs.finishedA, couriers_jobs.finishedB, couriers_jobs.finishedC, couriers_jobs.jobPenalties, couriers_jobs.finishedJob FROM couriers JOIN couriers_jobs ON couriers.courierNumber = couriers_jobs.courierNumber JOIN jobs ON couriers_jobs.jobNumber = jobs.jobNumber WHERE couriers.courierNumber = :courierNumber ORDER BY couriers_jobs.jobNumber ASC", {
                 courierNumber
             }) as CourierViewResults;
         return results.map(obj => new CourierViewRecord(obj));
@@ -76,7 +78,7 @@ export class CourierViewRecord implements CourierViewEntity {
 
     //@TODO zrobić customowy typ zamiast CourierViewResults dla widoku pojedynczego zadania
     static async getSingleJobOfOne(id: string): Promise<any> {
-        const [results] = await pool.execute("SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints, couriers_jobs.id, couriers_jobs.finishedA, couriers_jobs.finishedB, couriers_jobs.finishedC, .couriers_jobs.jobPenalties, couriers_jobs.finishedJob FROM couriers JOIN couriers_jobs ON couriers.courierNumber = couriers_jobs.courierNumber JOIN jobs ON couriers_jobs.jobNumber = jobs.jobNumber WHERE couriers_jobs.id = :id", {
+        const [results] = await pool.execute("SELECT couriers.courierId, couriers.courierNumber, couriers.courierName, couriers.category, couriers.courierPoints, couriers.courierPenalties, jobs.jobId, jobs.jobNumber, jobs.cp_a_name, jobs.cp_a_code, jobs.cp_b_name, jobs.cp_b_code, jobs.cp_c_name, jobs.cp_c_code, jobs.jobPoints, couriers_jobs.id, couriers_jobs.finishedA, couriers_jobs.finishedB, couriers_jobs.finishedC, couriers_jobs.jobPenalties, couriers_jobs.finishedJob FROM couriers JOIN couriers_jobs ON couriers.courierNumber = couriers_jobs.courierNumber JOIN jobs ON couriers_jobs.jobNumber = jobs.jobNumber WHERE couriers_jobs.id = :id", {
             id
         }) as CourierViewResults;
         return results.length === 0 ? null : new CourierViewRecord(results[0]);
@@ -93,12 +95,18 @@ export class CourierViewRecord implements CourierViewEntity {
         }
     };
 
-    async updateB(): Promise<string> {
+    async updateB(courierNumber: number, jobPenalties: number, jobPoints: number): Promise<string> {
         if (!this.id) {
             throw new Error("Cannot update this job - it does not exist!")
         } else {
-            await pool.execute("UPDATE `couriers_jobs` SET `finishedB` = 1, `jobPenalties` = 0, `finishedJob` = 1 WHERE `id` = :id", {
+            await pool.execute("UPDATE `couriers_jobs`, `couriers` SET `couriers_jobs`.`finishedB` = 1, `couriers_jobs`.`jobPenalties` = 0, `couriers_jobs`.`finishedJob` = 1, `couriers`.`courierPoints` = `couriers`.`courierPoints` + :jobPoints, `couriers`.`courierPenalties` = `couriers`.`courierPenalties` - :jobPenalties WHERE `couriers_jobs`.`id` = :id AND `couriers`.`courierNumber` = :courierNumber", {
+                courierNumber,
                 id: this.id,
+                jobPenalties: jobPenalties,
+                jobPoints,
+            });
+            await pool.execute("UPDATE `couriers` SET `couriers`.`sum` = `couriers`.`courierPoints` - `couriers`.`courierPenalties` WHERE `couriers`.`courierNumber` = :courierNumber", {
+                courierNumber,
             });
             return this.id;
         }

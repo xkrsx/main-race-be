@@ -79,7 +79,7 @@ export class AdminNewJobRecord implements JobEntity {
             }
         }
 
-        await pool.execute("INSERT INTO `jobs` (`id`, `cp_a_name`, `cp_a_code`, `cp_b_name`, `cp_b_code`, `cp_c_name`, `cp_c_code`, `points`) VALUES (:id, :cp_a_name, :cp_a_code, :cp_b_name, :cp_b_code, :cp_c_name, :cp_c_code, :points)", this);
+        await pool.execute("INSERT INTO `jobs` (`jobId`, `cp_a_name`, `cp_a_code`, `cp_b_name`, `cp_b_code`, `cp_c_name`, `cp_c_code`, `jobPoints`) VALUES (:jobId, :cp_a_name, :cp_a_code, :cp_b_name, :cp_b_code, :cp_c_name, :cp_c_code, :jobPoints)", this);
 
         return this.jobId;
     }

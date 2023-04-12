@@ -15,8 +15,9 @@ export class CourierRecord implements CourierEntity {
     public category: Category;
     public courierPoints: number;
     public courierPenalties: number;
+    public sum: number;
 
-    constructor(obj: NewCourierEntity) {
+    constructor(obj: CourierEntity) {
 
         if (!obj.courierNumber || obj.courierNumber < 0 || obj.courierNumber > 999) {
             throw new ValidationError('Numer musi pochodzić z zakresu od 0 do 999.');
@@ -36,6 +37,7 @@ export class CourierRecord implements CourierEntity {
         this.category = obj.category;
         this.courierPoints = obj.courierPoints;
         this.courierPenalties = obj.courierPenalties;
+        this.sum = obj.sum;
     }
 
     static async getSingleCourier(id: string): Promise<CourierRecord | null> {
@@ -64,7 +66,7 @@ export class CourierRecord implements CourierEntity {
     }
 
     static async getResults(): Promise<CourierRecord[]> {
-        const [results] = await pool.execute("SELECT * FROM `couriers_jobs` ORDER BY `courierPoints`") as CourierRecordResults;
+        const [results] = await pool.execute("SELECT `courierId`, `courierNumber`, `courierName`, `category`, `courierPoints`, `courierPenalties`, `sum` FROM `couriers` ORDER BY `sum` DESC") as CourierRecordResults;
 
         return results.map(obj => new CourierRecord(obj));
     }
