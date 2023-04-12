@@ -5,6 +5,7 @@ import {handleError} from "./utils/errors";
 import rateLimit from 'express-rate-limit';
 import {raceRouter} from "./routers/race";
 import {loginRouter} from "./routers/login";
+import {resultsRouter} from "./routers/results";
 
 const app = express();
 
@@ -20,9 +21,8 @@ app.use(rateLimit({
 
 app.use('/login', loginRouter);
 app.use('/race', raceRouter);
-// app.use('/results', resultsRouter);
+app.use('/results', resultsRouter);
 // app.use('/admin', adminRouter);
-// app.use('/english', englishRouter);
 
 app.use(handleError);
 

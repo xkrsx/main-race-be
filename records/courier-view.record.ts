@@ -27,6 +27,7 @@ export class CourierViewRecord implements CourierViewEntity {
     jobPoints: number;
     jobPenalties: number;
     finishedJob: number;
+    sum: number;
 
 
     constructor(obj: CourierViewEntity) {
@@ -64,6 +65,7 @@ export class CourierViewRecord implements CourierViewEntity {
         this.jobPoints = obj.jobPoints;
         this.jobPenalties = obj.jobPenalties;
         this.finishedJob = obj.finishedJob;
+        this.sum = obj.sum;
     };
 
     static async getAllJobsOfOne(courierNumber: number): Promise<any> {
@@ -102,6 +104,9 @@ export class CourierViewRecord implements CourierViewEntity {
                 id: this.id,
                 jobPenalties: jobPenalties,
                 jobPoints,
+            });
+            await pool.execute("UPDATE `couriers` SET `couriers`.`sum` = `couriers`.`courierPoints` - `couriers`.`courierPenalties` WHERE `couriers`.`courierNumber` = :courierNumber", {
+                courierNumber,
             });
             return this.id;
         }

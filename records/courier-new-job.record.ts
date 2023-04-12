@@ -47,11 +47,13 @@ export class CourierNewJobRecord implements NewJobBtnEntity {
             courierNumber: this.courierNumber,
             jobNumber: this.jobNumber,
         });
-
         await pool.execute("UPDATE `couriers` SET `courierPenalties` = `courierPenalties` + 20 WHERE `courierNumber` = :courierNumber", {
             // jobPenalties: this.jobPenalties,
             courierNumber: this.courierNumber,
         })
+        await pool.execute("UPDATE `couriers` SET `couriers`.`sum` = `couriers`.`courierPoints` - `couriers`.`courierPenalties` WHERE `couriers`.`courierNumber` = :courierNumber", {
+            courierNumber: this.courierNumber,
+        });
 
         return this.id;
     }

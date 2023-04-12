@@ -6,7 +6,7 @@ import {ValidationError} from "../utils/errors";
 export const raceRouter = Router();
 
 raceRouter
-    .patch('/finishedA/:jobId/', async (req: Request, res: Response) => {
+    .patch('/finishedA/:jobId', async (req: Request, res: Response) => {
         const id = req.params.jobId;
         const finishedA = req.body;
 
@@ -33,7 +33,7 @@ raceRouter
 
         await job.updateB(courierNumber, jobPenalties, jobPoints);
     })
-    .get('/:courierNumber/', async (req, res) => {
+    .get('/:courierNumber', async (req, res) => {
         const courierViewList = await CourierViewRecord.getAllJobsOfOne(Number(req.params.courierNumber));
 
         res.json({
