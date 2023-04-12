@@ -1,4 +1,4 @@
-import express, {json} from "express";
+import express, {json, Router} from "express";
 import cors from "cors";
 import 'express-async-errors';
 import {handleError} from "./utils/errors";
@@ -21,6 +21,9 @@ app.use(json());
 //     max: 100, // Limit each IP to 100 requests per `window` (here, per 5 minutes)
 // }))
 
+const router = Router();
+
+app.use('/api', router);
 app.use('/login', loginRouter);
 app.use('/race', raceRouter);
 app.use('/results', resultsRouter);
