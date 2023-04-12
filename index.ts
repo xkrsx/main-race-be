@@ -3,9 +3,11 @@ import cors from "cors";
 import 'express-async-errors';
 import {handleError} from "./utils/errors";
 import rateLimit from 'express-rate-limit';
+
 import {raceRouter} from "./routers/race";
 import {loginRouter} from "./routers/login";
 import {resultsRouter} from "./routers/results";
+import {adminRouter} from "./routers/admin";
 
 const app = express();
 
@@ -22,7 +24,7 @@ app.use(rateLimit({
 app.use('/login', loginRouter);
 app.use('/race', raceRouter);
 app.use('/results', resultsRouter);
-// app.use('/admin', adminRouter);
+app.use('/admin', adminRouter);
 
 app.use(handleError);
 
