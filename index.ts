@@ -16,10 +16,10 @@ app.use(cors({
 }));
 
 app.use(json());
-app.use(rateLimit({
-    windowMs: 5 * 60 * 1000, // 5 minutes
-    max: 100, // Limit each IP to 100 requests per `window` (here, per 5 minutes)
-}))
+// app.use(rateLimit({
+//     windowMs: 1000 * 60 * 5, // 5 minutes
+//     max: 100, // Limit each IP to 100 requests per `window` (here, per 5 minutes)
+// }))
 
 app.use('/login', loginRouter);
 app.use('/race', raceRouter);
