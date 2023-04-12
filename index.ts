@@ -13,7 +13,7 @@ import {config} from "./config/config";
 const app = express();
 
 app.use(cors({
-    origin: config.corsOrigin,
+    origin: 'http://localhost:3000/',
 }));
 
 app.use(json());
@@ -24,11 +24,12 @@ app.use(json());
 
 const router = Router();
 
+router.use('/login', loginRouter);
+router.use('/race', raceRouter);
+router.use('/results', resultsRouter);
+router.use('/admin', adminRouter);
+
 app.use('/api', router);
-app.use('/login', loginRouter);
-app.use('/race', raceRouter);
-app.use('/results', resultsRouter);
-app.use('/admin', adminRouter);
 
 app.use(handleError);
 
