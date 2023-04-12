@@ -8,11 +8,12 @@ import {raceRouter} from "./routers/race";
 import {loginRouter} from "./routers/login";
 import {resultsRouter} from "./routers/results";
 import {adminRouter} from "./routers/admin";
+import {config} from "./config/config";
 
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: config.corsOrigin,
 }));
 
 app.use(json());
